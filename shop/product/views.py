@@ -50,6 +50,7 @@ class ProductsApi(ListAPIView):
     def get_queryset(self, *args, **kwargs):
         if dict(self.request.GET).get("search"):
             queryset = ProductModel.objects.all().filter(Q(name__icontains=dict(self.request.GET).get("search")[0]))
+            print(f"get_queryset {queryset} ")
         else:
             queryset = ProductModel.objects.all()
 

@@ -37,7 +37,7 @@ async function DislikeProduct(product_id) {
 async function SearchProduct() {
     const resp = await axiosInstance.get(`http://127.0.0.1:8000/product/api?search=${search}`);
     console.log("SearchProduct", resp.data);
-    //setProducts(resp.data);
+    setProducts(resp.data);
 }
 
 async function GetProducts() {
