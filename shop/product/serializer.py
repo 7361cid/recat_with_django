@@ -18,7 +18,6 @@ class ProductSerializer(serializers.ModelSerializer):
         print(f"get_tags  {list(obj.tags.all())}")
         tags = []
         for tag in list(obj.tags.all()):
-            print(f"get_tags2  {dir(tag)}")
             tags.append(str(tag))
         print(f"get_tags3  {tags}")
         return tags

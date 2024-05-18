@@ -10,6 +10,7 @@ from .serializer import ProductSerializer, CartSerializer
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
+from taggit.models import Tag
 
 
 class ProductView(View):
@@ -51,6 +52,13 @@ class ProductsApi(ListAPIView):
         if dict(self.request.GET).get("search"):
             queryset = ProductModel.objects.all().filter(Q(name__icontains=dict(self.request.GET).get("search")[0]))
             print(f"get_queryset {queryset} ")
+        elif dict(self.request.GET).get("search_tag"):
+            tag = dict(self.request.GET).get('search_tag')[0]
+            tag_obj = Tag.objects.get(name=tag)
+            # for p in ProductModel.objects.all():
+            #     print(f"p={p} {p.tagged_items} ")  # {dir(p)}
+            queryset = ProductModel.objects.all().filter(tags__name__in=[tag])
+            print(f"get_queryset2 {tag} {tag_obj} {queryset}")
         else:
             queryset = ProductModel.objects.all()
 

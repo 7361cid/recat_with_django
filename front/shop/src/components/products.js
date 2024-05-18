@@ -34,6 +34,12 @@ async function DislikeProduct(product_id) {
     {"product_id": product_id});
 }
 
+async function FilterByTag(tag) {
+    console.log("FilterByTag", tag);
+    const resp = await axiosInstance.get(`http://127.0.0.1:8000/product/api?search_tag=${tag}`);
+    setProducts(resp.data);
+}
+
 async function SearchProduct() {
     const resp = await axiosInstance.get(`http://127.0.0.1:8000/product/api?search=${search}`);
     console.log("SearchProduct", resp.data);
@@ -65,7 +71,9 @@ async function GetProducts() {
                     <h2>tags: {product.tags}</h2>
                     <tbody>
                         {product.tags.map(function(object, i){
-                            return <div> {product.tags[i]} </div>
+                            return <div>
+                            < button onClick={() => { FilterByTag(product.tags[i]) }}>{product.tags[i]}< /button >
+                            </div>
                         })}
                     </tbody>
                     <img src={`http://localhost:8000${product.image_url}`} width="200" height="200"></img>
