@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 
 import Login from "./components/login" ;
@@ -19,36 +18,26 @@ function App() {
    const [password, setPassword] = useState('');
    const [error, setError] = useState('');
    const [user, setUser] = useState({ loggedIn: false, user_id: 0});
-//
-//    useEffect(()=>{
-//        getProducts()
-//    },[])
-
-//   const getProducts = (data)=>{
-//        axios.get('http://127.0.0.1:8000/product/api').then(data => setProducts(data.data)).catch(error => {
-//    console.log(error);console.log(data);})
-//    }
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
     < BrowserRouter >
     <div className = "site">
-                 <nav>
-                    <Link className={"nav-link"} to={"/userpage/"}>Home</Link>
-                    <Link className={"nav-link"} to={"/login/"}>Login</Link>
-                    <Link className={"nav-link"} to={"/signup/"}>Signup</Link>
-                    <Link className={"nav-link"} to={"/products/"}>Products</Link>
-                </nav>
-                <main>
-                    <h1>Ahhh after 10,000 years I'm free. Time to conquer the Earth!</h1>
-
-                    <Switch>
+                <ul>
+                  <li> <Link className={"nav-link"} to={"/userpage/"}>Home</Link> </li>
+                  <li> <Link className={"nav-link"} to={"/login/"}>Login</Link> </li>
+                  <li> <Link className={"nav-link"} to={"/signup/"}>Signup</Link> </li>
+                  <li> <Link className={"nav-link"} to={"/products/"}>Products</Link> </li>
+                </ul>
+                <Switch>
                         <Route exact path={"/login/"} component={Login}/>
                         <Route exact path={"/signup/"} component={Signup}/>
                         <Route exact path={"/products/"} component={Products}/>
                         <Route exact path={"/userpage/"} component={UserPage}/>
                         <Route path={"/"} render={() => <div>Home again</div>}/>
-                    </Switch>
+                </Switch>
+                <main>
+                    <h1>Ahhh after 10,000 years I'm free. Time to conquer the Earth!</h1>
                 </main>
             </div>
             </ BrowserRouter >

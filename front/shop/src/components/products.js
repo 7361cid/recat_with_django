@@ -57,7 +57,7 @@ async function GetProducts() {
     };
 
         return (
-            < div > Products
+            < div >
             <div>
                 Поиск <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}/>
                 <input type="submit" value="GO" class="submit-btn" onClick={() => { SearchProduct();}} />
@@ -65,6 +65,13 @@ async function GetProducts() {
         {products.map((product, index) => {
                 return (
                   <div key={index}>
+                    <table>
+                    <tr><td rowspan="4"><img src={`http://localhost:8000${product.image_url}`} width="200" height="200"></img>
+                    </td><td>{product.name}</td></tr>
+                    <tr><td>{product.price}</td></tr>
+                    <tr><td>{product.likes}</td></tr>
+                    <tr><td>{product.tags}</td></tr>
+                    </table>
                     <h2>name: {product.name}</h2>
                     <h2>price: {product.price}</h2>
                     <h2>likes: {product.likes}</h2>
