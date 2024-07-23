@@ -1,14 +1,18 @@
 import axios from "axios";
 import {useEffect, useState, useRef} from "react";
 import axiosInstance from "../axiosApi" ;
+import { useHistory } from 'react-router-dom';
 
 function UserPage() {
 
     const [user, setUser] = useState([]);
     const [cart, setCart] = useState([]);
     const [paymentStatus, setPaymentStatus] = useState("");
+    const [promocod, setPromocod] = useState("");
+    const [promocodStatus, setPromocodStatus] = useState("");
     const [products, setProducts] = useState([]);
     const isCalledRef =  useRef(false);
+    const history = useHistory();
 
     useEffect(()=>{
         console.log("YYY", user);
@@ -28,13 +32,21 @@ async function Delete(cart_id) {
 }
 
 async function Payment() {
-    const resp = await axiosInstance.get('http://127.0.0.1:8000/api/user/payment/').catch(function (error) {
+    const resp = await axiosInstance.get(`http://127.0.0.1:8000/api/user/payment/?promocod=${promocod}`).catch(function (error) {
         console.log("Payment Error catch", error);
         setPaymentStatus(`Payment Error ${error.response.data}`)
     });
     if (!paymentStatus.includes("Error"))
     {setPaymentStatus(`Оплата прошла`)}
     isCalledRef.current = false
+}
+
+async function CheckPromocod(cod) {
+    setPromocod(cod);
+    const resp = await axiosInstance.post(`http://127.0.0.1:8000/product/api/promocod_check`,
+    {"promocod": cod})
+    console.log("CheckPromocod", resp);
+    setPromocodStatus(`CheckPromocod ${resp.data}`);
 }
 
 async function GetProductData(item) {
@@ -51,7 +63,9 @@ async function GetProductData(item) {
 async function GetUserData(get_products=false) {
        //event.preventDefault();
        //axiosInstance.defaults.headers[ 'Authorization' ]
-       const resp = await axiosInstance.get('http://127.0.0.1:8000/api/user/get/');
+
+       try {
+            const resp = await axiosInstance.get('http://127.0.0.1:8000/api/user/get/');
        setUser(resp.data);
        console.log("GetUserData", resp.data);
         console.log("GetUserData products.length", products.length);
@@ -65,7 +79,12 @@ async function GetUserData(get_products=false) {
                 GetProductData(item)
               }
             console.log("products", products);
-    };
+        };
+
+        } catch (error) {
+            console.log("GetUserDataError", error);
+            history.replace('/login')
+        }
 }
 
         return (
@@ -91,9 +110,10 @@ async function GetUserData(get_products=false) {
                     </div>
                     < button onClick={() => { Payment(); GetUserData(true); }}> Оформить покупку < /button >
                     <p>{paymentStatus}</p>
+                    Ввести промокод <input type="text" value={promocod} onChange={(e) => CheckPromocod(e.target.value)}/>
+                    <p>{promocodStatus}</p>
                 </div>
             </div>
         )
-
 }
 export default UserPage;

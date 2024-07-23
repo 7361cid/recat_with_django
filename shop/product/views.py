@@ -5,7 +5,7 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, ListCreateAPIView
 from rest_framework.response import Response
-from .models import ProductModel, CartItemModel, ProductLikesModel
+from .models import ProductModel, CartItemModel, ProductLikesModel, PromocodModel
 from .serializer import ProductSerializer, CartSerializer
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
@@ -73,8 +73,8 @@ class ProductsApiDetail(APIView):
             raise Http404
 
     def get(self, request, product_id):
-        task = self.get_object(product_id)
-        serializer = ProductSerializer(task)
+        products = self.get_object(product_id)
+        serializer = ProductSerializer(products)
         return Response(serializer.data)
 
 
@@ -119,6 +119,13 @@ class ProductDislikeView(APIView):
             my_object.delete()
         return Response("IT's OK", status=status.HTTP_200_OK)
 
+class PromocodCheckView(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            promocod = PromocodModel.objects.get(code=request.data['promocod'])
+            return Response(f"PROMOCOD CORECT DISCOUND {promocod.discount}", status=status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response("PROMOCOD NOT CORECT", status=status.HTTP_200_OK)
 
 class CartDeleteView(APIView):
     def delete(self, request, cartid):

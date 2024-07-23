@@ -1,5 +1,5 @@
 import axios from "axios";
-import {useEffect, useState, useContext} from "react";
+import {useEffect, useState} from "react";
 import axiosInstance from "../axiosApi" ;
 import { UserContext } from "../App";
 import { useHistory } from "react-router";
@@ -9,7 +9,6 @@ function Login() {
     const [token, setToken] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const { user, setUser } = useContext(UserContext);
     let history = useHistory();
 
     useEffect(()=>{
@@ -25,8 +24,6 @@ async function LoginSubmit(event) {
         axiosInstance.defaults.headers[ 'Authorization' ] = "JWT " + response.data.access;
         localStorage.setItem( 'access_token' , response.data.access);
         localStorage.setItem( 'refresh_token' , response.data.refresh);
-        console.log(user);
-        setUser({ loggedIn: true, user_id: response.data.id});
         history.push('/userpage/');
     };
 

@@ -2,14 +2,14 @@ import axios from "axios";
 import {useEffect, useState, useContext} from "react";
 import axiosInstance from "../axiosApi" ;
 import { UserContext } from "../App";
+import { useHistory } from 'react-router-dom';
 
 function Products() {
 
     const [products, setProducts] = useState([]);
-    const { user, setUser } = useContext(UserContext);
     const [likesList, setLikesList] = useState("");
     const [search, setSearch] = useState("");
-    console.log("FROM Products value of user", user);
+    const history = useHistory();
     useEffect(()=>{
         GetProducts();
         console.log("YYY", products);
@@ -49,11 +49,17 @@ async function SearchProduct() {
 async function GetProducts() {
        //event.preventDefault();
        //axiosInstance.defaults.headers[ 'Authorization' ]
-       const resp = await axiosInstance.get('http://127.0.0.1:8000/product/api');
-       setProducts(resp.data);
-       console.log("ZZZ", resp.data);
-       const likes_resp = await axiosInstance.get('http://127.0.0.1:8000/product/api/likes_list');
-       setLikesList(likes_resp.data);
+       try {
+            const resp = await axiosInstance.get('http://127.0.0.1:8000/product/api')
+            setProducts(resp.data);
+            console.log("ZZZ", resp.data);
+            const likes_resp = await axiosInstance.get('http://127.0.0.1:8000/product/api/likes_list');
+            setLikesList(likes_resp.data);
+
+        } catch (error) {
+            console.log("GetProductsError", error);
+            history.replace('/login')
+        }
     };
 
         return (
@@ -62,40 +68,36 @@ async function GetProducts() {
                 Поиск <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}/>
                 <input type="submit" value="GO" class="submit-btn" onClick={() => { SearchProduct();}} />
             </div>
+         <section class="product_section">
         {products.map((product, index) => {
                 return (
                   <div key={index}>
                     <table>
                     <tr><td rowspan="4"><img src={`http://localhost:8000${product.image_url}`} width="200" height="200"></img>
                     </td><td>{product.name}</td></tr>
-                    <tr><td>{product.price}</td></tr>
+                    <tr><td>{product.price}$
+                    <input id={`input_${product.id}`} type="number" />
+                    < button onClick={() => { BuyProduct(product.id) }}>Купить< /button >
+                    </td></tr>
+                    <tr><td><a href={`/chat/${product.user_seler}`}>Чат с продавцом</a> </td></tr> // передовать owner_id id продавца
                     <tr><td>{product.likes}</td></tr>
-                    <tr><td>{product.tags}</td></tr>
-                    </table>
-                    <h2>name: {product.name}</h2>
-                    <h2>price: {product.price}</h2>
-                    <h2>likes: {product.likes}</h2>
-                    <h2>tags: {product.tags}</h2>
-                    <tbody>
-                        {product.tags.map(function(object, i){
+                    <tr><td>
+                    Теги
+                    {product.tags.map(function(object, i){
                             return <div>
                             < button onClick={() => { FilterByTag(product.tags[i]) }}>{product.tags[i]}< /button >
                             </div>
                         })}
-                    </tbody>
-                    <img src={`http://localhost:8000${product.image_url}`} width="200" height="200"></img>
-                    <hr />
-                    <input id={`input_${product.id}`} type="number" />
-                    < button onClick={() => { BuyProduct(product.id) }}>Купить< /button >
+                    </td></tr>
+                    </table>
                     {likesList.includes(product.id) ? < button onClick={() => { DislikeProduct(product.id);GetProducts() }}>Дизлайк< /button >
                     : < button onClick={() => { LikeProduct(product.id);GetProducts() }}>Лайк< /button >}
 
                   </div>
                 );
               })}
-                    </div>
+                    </section></div>
         )
-
 }
 
 export default Products;

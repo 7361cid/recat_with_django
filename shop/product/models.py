@@ -15,6 +15,7 @@ class ProductModel(models.Model):
     image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True, verbose_name='Фото')
     likes = ComputedTextField(compute_from='calculation_likes', default=0)
     tags = TaggableManager()
+    user_seler = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
 
     @property
     def calculation_likes(self):
@@ -38,6 +39,9 @@ class CartItemModel(models.Model):
     def __str__(self):
         return f'{self.quantity} x {self.product.name}'
 
+class PromocodModel(models.Model):
+    code = models.CharField(max_length=255, verbose_name=("XXX"))
+    discount = models.PositiveIntegerField(default=0)
 
 class ProductLikesModel(models.Model):
     product = models.ForeignKey(ProductModel, on_delete=models.CASCADE)

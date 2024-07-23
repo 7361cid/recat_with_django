@@ -1,5 +1,5 @@
 from .views import ProductView, ProductDetailView, ProductsApi, ProductsApiDetail, CartView, ProductBuyView,\
-    CartDeleteView, ProductLikeView, ProductsLikesListApiView, ProductDislikeView
+    CartDeleteView, ProductLikeView, ProductsLikesListApiView, ProductDislikeView, PromocodCheckView
 
 from django.urls import path
 
@@ -14,4 +14,5 @@ urlpatterns = [
     path('api/like', ProductLikeView.as_view(), name="like_product"),
     path('api/dislike', ProductDislikeView.as_view(), name="dislike_product"),
     path('api/likes_list', ProductsLikesListApiView.as_view(), name="likes_list"),
+    path('api/promocod_check', PromocodCheckView.as_view(), name="promocod_check"),
 ]
