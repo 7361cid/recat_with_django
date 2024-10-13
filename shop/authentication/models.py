@@ -3,5 +3,4 @@ from django.db import models
 
 
 class CustomUser (AbstractUser):
-    fav_color = models.CharField(blank=True, max_length=120, default="black")
     money = models.IntegerField(default=1000)

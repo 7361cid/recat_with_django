@@ -15,13 +15,10 @@ function UserPage() {
     const history = useHistory();
 
     useEffect(()=>{
-        console.log("YYY", user);
         if (!isCalledRef.current) {
           isCalledRef.current = true;
           GetUserData();
         }
-        console.log("YYY", user);
-      //  console.log("products", products);
     },[GetUserData]);
 
 
@@ -45,7 +42,6 @@ async function CheckPromocod(cod) {
     setPromocod(cod);
     const resp = await axiosInstance.post(`http://127.0.0.1:8000/product/api/promocod_check`,
     {"promocod": cod})
-    console.log("CheckPromocod", resp);
     setPromocodStatus(`CheckPromocod ${resp.data}`);
 }
 
@@ -53,10 +49,7 @@ async function GetProductData(item) {
     const newProductValue = await axiosInstance(`http://127.0.0.1:8000/product/api/${item.product}`);
     newProductValue.data.cart_id = item.id;
     newProductValue.data.quantity = item.quantity;
-    console.log("GetProductData newProductValue0", newProductValue);
     setProducts(current => [...current, newProductValue.data]);
-    console.log("GetProductData newProductValue", newProductValue);
-    console.log("GetProductData products", products);
 }
 
 
@@ -67,18 +60,14 @@ async function GetUserData(get_products=false) {
        try {
             const resp = await axiosInstance.get('http://127.0.0.1:8000/api/user/get/');
        setUser(resp.data);
-       console.log("GetUserData", resp.data);
-        console.log("GetUserData products.length", products.length);
        if (products.length == 0 || get_products)
        {
            const resp2 = await axiosInstance(`http://127.0.0.1:8000/product/api/cart/${resp.data.id}`);
            setCart(resp2.data);
-           console.log("GetUserData 2resp", resp2.data);   // данные о корзине
            setProducts([]);
             for (const item of resp2.data) {
                 GetProductData(item)
               }
-            console.log("products", products);
         };
 
         } catch (error) {

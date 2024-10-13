@@ -7,6 +7,10 @@ from taggit.managers import TaggableManager
 
 # Create your models here.
 class ProductModel(models.Model):
+    class Meta:
+        verbose_name = 'Продукт'
+        verbose_name_plural = 'Продукты'
+
     name = models.CharField(max_length=255, verbose_name=("Наименование"))
     slug = models.SlugField(unique_for_date='created', verbose_name=("Метка"))
     created = models.DateTimeField(auto_now_add=True)
@@ -31,6 +35,9 @@ class ProductModel(models.Model):
 
 
 class CartItemModel(models.Model):
+    class Meta:
+        verbose_name = 'Корзина'
+        verbose_name_plural = 'Корзины'
     product = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -40,9 +47,15 @@ class CartItemModel(models.Model):
         return f'{self.quantity} x {self.product.name}'
 
 class PromocodModel(models.Model):
+    class Meta:
+        verbose_name = 'Промокод'
+        verbose_name_plural = 'Промокоды'
     code = models.CharField(max_length=255, verbose_name=("XXX"))
     discount = models.PositiveIntegerField(default=0)
 
 class ProductLikesModel(models.Model):
+    class Meta:
+        verbose_name = 'Лайк'
+        verbose_name_plural = 'Лайки'
     product = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

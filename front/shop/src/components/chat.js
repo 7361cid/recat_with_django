@@ -9,37 +9,31 @@ function Chat() {
     const [chatData, setChatData] = useState('');
     const [messages, setMessages] = useState([]);
     const [user, setUser] = useState([]);
-    const { owner_id } = useParams()
+    const { chat_id } = useParams();
 
     useEffect(()=>{
         ChatInit();
     },[]);
 
 async function ChatInit() {
-       //event.preventDefault();
-        console.log('ChatInit ', owner_id);
         chatUpdate();
-
     };
 
 async function chatUpdate() {
     try {
-            const response = await axiosInstance.get(`http://127.0.0.1:8000/chat/api/get_message?owner_id=${owner_id}`)
-            console.log("chatUpdate ZZZ", response);
-            for (let item of response.data) {
-                console.log("chatUpdate loop ", item);
-                console.log("owner_id ", owner_id);
-                if (item.user_from == owner_id) {
+            const response = await axiosInstance.get(`http://127.0.0.1:8000/chat/api/message?chat_id=${chat_id}`)
+            console.log("chatUpdate", response);
+            const owner_id = response.data.owner_id;
+            for (let item of response.data.messages) {
+                console.log("chatUpdate2", item.message_owner_id, owner_id);
+                if (item.message_owner_id == owner_id) {  // Разделение чата на две колонки для принятых и отправленных сообщений
                     item.className = "chatMessage";
                 }
-                if (item.user_from != owner_id) {
+                else  {
                     item.className = "chatMessage2";
                 }
               }
-            setMessages(response.data);
-            for (let item of response.data) {
-                console.log("chatUpdate loop2 ", item);
-                }
+            setMessages(response.data.messages);
 
         } catch (error) {
             console.log("chatUpdateError", error);
@@ -49,13 +43,17 @@ async function chatUpdate() {
 
 async function ChatSubmit(event) {
        event.preventDefault();
-       const resp = await axiosInstance.get('http://127.0.0.1:8000/api/user/get/');
-       setUser(resp.data);
-       console.log("GetUserData", resp.data);
-       const response = await axiosInstance.post('http://127.0.0.1:8000/chat/api/message',
-       { "text": text, "user_from" : user, "user_to": owner_id});
-       console.log("ChatSubmit ZZZ", response);
-       await chatUpdate();
+       try {
+            const resp = await axiosInstance.get('http://127.0.0.1:8000/api/user/get/');
+            setUser(resp.data);
+            const response = await axiosInstance.post('http://127.0.0.1:8000/chat/api/message',
+            { "text": text, "user_from" : user, "chat_id": chat_id});
+            console.log("chatSubmit", response);
+            await chatUpdate();
+        } catch (error) {
+            console.log("Message Create Error", error);
+        }
+
     };
 
         return (
@@ -63,7 +61,7 @@ async function ChatSubmit(event) {
                 <div id="chatdata">
                 {messages.map(function(object, i){
                             return <div>
-                                <p className={object.className}> {i} {object.text} className {object.className} iduser_from {object.user_from}</p>
+                                <p className={object.className}> {object.text} </p>
                                 </div>
                         })}
                 </div>

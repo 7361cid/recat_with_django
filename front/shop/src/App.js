@@ -35,7 +35,7 @@ function App() {
                         <Route exact path={"/signup/"} component={Signup}/>
                         <Route exact path={"/products/"} component={Products}/>
                         <Route exact path={"/userpage/"} component={UserPage}/>
-                        <Route exact path={"/chat/:owner_id"} component={Chat}/>
+                        <Route exact path={"/chat/:chat_id"} component={Chat}/>
                         <Route path={"/"} render={() => <div>Home again</div>}/>
                 </Switch>
                 <main>

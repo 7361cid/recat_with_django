@@ -13,6 +13,20 @@ function Signup() {
     const [SignupStatus, setSignupStatus] = useState('');
     const history = useHistory();
 
+    function get_error_message_from_response(response) {
+        let message = '';
+        if (response.data.email) {
+            message = message + `Ошибка в email ${response.data.email}`
+        }
+        if (response.data.password) {
+            message = message + `Ошибка в пароле ${response.data.password}`
+        }
+        if (response.data.username) {
+            message = message + `Ошибка в имени пользователя ${response.data.username}`
+        }
+        return message;
+    }
+
     async function SignupSubmit(event) {
        event.preventDefault();
 
@@ -23,18 +37,20 @@ function Signup() {
 
         } catch (error) {
             console.log("SignupSubmit", error);
-            setSignupStatus(`Ошибка ${error.response.data.email}
-             ${error.response.data.username} ${error.response.data.password}`);
+
+            //  TODO переименовать поля в админке и в формах на русские
+            let error_message = get_error_message_from_response(error.response);
+            setSignupStatus(`${error_message}`);
         }
     };
 
         return (
             < div > Signup
                  <form onSubmit={SignupSubmit}>
-                    <label>
+                    <div>
                         Username:
                         <input name="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
-                    </label>
+                    </div>
                     <label>
                         Password:
                         <input name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
@@ -43,10 +59,10 @@ function Signup() {
                         Password Confirm:
                         <input name="password2" type="password" value={password2} onChange={(e) => setPassword2(e.target.value)}/>
                     </label>
-                    <label>
+                    <div>
                         Email:
                         <input name="email" type="text" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                    </label>
+                    </div>
                     <input type="submit" value="Submit"/>
                 </form>
                 <p> {SignupStatus} </p>
