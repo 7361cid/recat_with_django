@@ -42,11 +42,6 @@ async function LikeProduct(product_id) {
     {"product_id": product_id});
 }
 
-async function DislikeProduct(product_id) {
-    const resp = await axiosInstance.post('http://127.0.0.1:8000/product/api/dislike',
-    {"product_id": product_id});
-}
-
 async function FilterByTag(tag) {
     const resp = await axiosInstance.get(`http://127.0.0.1:8000/product/api?search_tag=${tag}`);
     setProducts(resp.data);
@@ -101,8 +96,7 @@ async function GetProducts() {
                         })}
                     </td></tr>
                     </table>
-                    {likesList.includes(product.id) ? < button onClick={() => { DislikeProduct(product.id);GetProducts() }}>Дизлайк< /button >
-                    : < button onClick={() => { LikeProduct(product.id);GetProducts() }}>Лайк< /button >}
+                    < button onClick={() => { LikeProduct(product.id);GetProducts() }}>Лайк< /button >
 
                   </div>
                 );

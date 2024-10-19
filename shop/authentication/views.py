@@ -58,10 +58,13 @@ class PaymentView(APIView):
             total_price += q.product.price * q.quantity
         print(total_price)
         total_price = total_price - discount * total_price/100
+        print(f"PAYMENT VIEW {list(queryset)}")
+        if len(list(queryset)) == 0:
+            return Response("Корзина пустая", status=status.HTTP_403_FORBIDDEN)
         if total_price < user.money:
             user.money = user.money - total_price
             user.save()
             queryset.delete()
-            return Response("IT's OK", status=status.HTTP_200_OK)
+            return Response("OK", status=status.HTTP_200_OK)
         else:
-            return Response("You are broke", status=status.HTTP_403_FORBIDDEN)
+            return Response("Мало денег", status=status.HTTP_403_FORBIDDEN)

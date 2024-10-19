@@ -10,7 +10,7 @@ class ProductModel(models.Model):
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
-
+    id = models.IntegerField(default=0, primary_key=True)
     name = models.CharField(max_length=255, verbose_name=("Наименование"))
     slug = models.SlugField(unique_for_date='created', verbose_name=("Метка"))
     created = models.DateTimeField(auto_now_add=True)
@@ -20,7 +20,8 @@ class ProductModel(models.Model):
     likes = ComputedTextField(compute_from='calculation_likes', default=0)
     tags = TaggableManager()
     user_seler = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
-
+#  TODO  смену кнопок лайк дизлайк
+#  TODO  проблема пустой корзины
     @property
     def calculation_likes(self):
         queryset = ProductLikesModel.objects.all()

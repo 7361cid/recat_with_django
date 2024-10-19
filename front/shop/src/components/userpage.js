@@ -30,11 +30,12 @@ async function Delete(cart_id) {
 
 async function Payment() {
     const resp = await axiosInstance.get(`http://127.0.0.1:8000/api/user/payment/?promocod=${promocod}`).catch(function (error) {
-        console.log("Payment Error catch", error);
-        setPaymentStatus(`Payment Error ${error.response.data}`)
-    });
-    if (!paymentStatus.includes("Error"))
-    {setPaymentStatus(`Оплата прошла`)}
+        if (error.response.status != 200)
+        {   console.log("Payment Error catch", error);
+            setPaymentStatus(`Payment Error ${error.response.data}`)
+        } else {console.log("Payment Debug", paymentStatus);
+                setPaymentStatus(`Оплата прошла`)}
+        })
     isCalledRef.current = false
 }
 

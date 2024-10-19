@@ -105,7 +105,9 @@ class ProductLikeView(APIView):
     def post(self, request, *args, **kwargs):
         product = ProductModel.objects.get(pk=request.data['product_id'])
         try:
-            ProductLikesModel.objects.get(product=product, user=request.user)
+            obj = ProductLikesModel.objects.get(product=product, user=request.user)
+            # если лайк уже есть и это повторное нажатие, удаляем
+            obj.delete()
         except ObjectDoesNotExist:
             ProductLikesModel.objects.create(product=product, user=request.user)
         return Response("IT's OK", status=status.HTTP_200_OK)
