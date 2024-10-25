@@ -13,7 +13,6 @@ function Logout() {
     },[]);
 
 async function LogoutFunc() {
-       //event.preventDefault();
         axiosInstance.defaults.headers[ 'Authorization' ] = ""
         localStorage.setItem( 'access_token' , "");
         localStorage.setItem( 'refresh_token' , "");

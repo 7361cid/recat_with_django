@@ -41,9 +41,11 @@ def get_profile(request):
 
 class PaymentView(APIView):
     def get(self, request):
+        """
+        Оформление оплаты
+        """
         discount = 0
         if dict(self.request.GET).get("promocod"):
-            print(f"promocod DEBUG {dict(self.request.GET).get('promocod')}")
             try:
                 promocod = PromocodModel.objects.get(code=dict(self.request.GET).get('promocod')[0])
                 discount = promocod.discount
@@ -56,9 +58,7 @@ class PaymentView(APIView):
         queryset.filter(user=user.id)
         for q in queryset:
             total_price += q.product.price * q.quantity
-        print(total_price)
-        total_price = total_price - discount * total_price/100
-        print(f"PAYMENT VIEW {list(queryset)}")
+        total_price = total_price - discount * total_price/100  # рассчет цены с учетом скидки
         if len(list(queryset)) == 0:
             return Response("Корзина пустая", status=status.HTTP_403_FORBIDDEN)
         if total_price < user.money:

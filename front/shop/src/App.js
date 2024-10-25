@@ -23,11 +23,11 @@ function App() {
     < BrowserRouter >
     <div className = "site">
                 <ul>
-                  <li> <Link className={"nav-link"} to={"/userpage/"}>Home</Link> </li>
-                  <li> <Link className={"nav-link"} to={"/login/"}>Login</Link> </li>
-                  <li> <Link className={"nav-link"} to={"/logout/"}>Logout</Link> </li>
-                  <li> <Link className={"nav-link"} to={"/signup/"}>Signup</Link> </li>
-                  <li> <Link className={"nav-link"} to={"/products/"}>Products</Link> </li>
+                  <li> <Link className={"nav-link"} to={"/userpage/"}>Страница пользователя</Link> </li>
+                  <li> <Link className={"nav-link"} to={"/login/"}>Вход</Link> </li>
+                  <li> <Link className={"nav-link"} to={"/logout/"}>Выход</Link> </li>
+                  <li> <Link className={"nav-link"} to={"/signup/"}>Регистрация</Link> </li>
+                  <li> <Link className={"nav-link"} to={"/products/"}>Продукты</Link> </li>
                 </ul>
                 <Switch>
                         <Route exact path={"/login/"} component={Login}/>

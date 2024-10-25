@@ -48,6 +48,3 @@ async function LoginSubmit(event) {
 
 }
 export default Login;
-
-// TODO Выделить модель чатов
-// TODO фикс сообщения об ошибке при авторизации

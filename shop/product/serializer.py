@@ -15,12 +15,11 @@ class ProductSerializer(serializers.ModelSerializer):
         return str(obj.image.url)
 
     def get_tags(self, obj):
-        print(f"get_tags  {list(obj.tags.all())}")
         tags = []
         for tag in list(obj.tags.all()):
             tags.append(str(tag))
-        print(f"get_tags3  {tags}")
         return tags
+
 
 class CartSerializer(serializers.ModelSerializer):
     class Meta:

@@ -5,11 +5,11 @@ import { useParams } from 'react-router-dom'
 
 function Chat() {
 
-    const [text, setText] = useState('');
+    const [newMessageText, setNewMessageText] = useState('');
     const [chatData, setChatData] = useState('');
     const [messages, setMessages] = useState([]);
     const [user, setUser] = useState([]);
-    const { chat_id } = useParams();
+    const { chat_id } = useParams();   // параметр из ссылки
 
     useEffect(()=>{
         ChatInit();
@@ -19,7 +19,7 @@ async function ChatInit() {
         chatUpdate();
     };
 
-async function chatUpdate() {
+async function chatUpdate() {   // Получение данных чата
     try {
             const response = await axiosInstance.get(`http://127.0.0.1:8000/chat/api/message?chat_id=${chat_id}`)
             console.log("chatUpdate", response);
@@ -42,12 +42,12 @@ async function chatUpdate() {
 
 
 async function ChatSubmit(event) {
-       event.preventDefault();
+       event.preventDefault();   // Создание нового сообщения
        try {
             const resp = await axiosInstance.get('http://127.0.0.1:8000/api/user/get/');
             setUser(resp.data);
             const response = await axiosInstance.post('http://127.0.0.1:8000/chat/api/message',
-            { "text": text, "user_from" : user, "chat_id": chat_id});
+            { "text": newMessageText, "user_from" : user, "chat_id": chat_id});
             console.log("chatSubmit", response);
             await chatUpdate();
         } catch (error) {
@@ -59,7 +59,7 @@ async function ChatSubmit(event) {
         return (
             < div > Chat
                 <div id="chatdata">
-                {messages.map(function(object, i){
+                {messages.map(function(object, i){          // Вывод старых сообщений
                             return <div>
                                 <p className={object.className}> {object.text} </p>
                                 </div>
@@ -68,7 +68,7 @@ async function ChatSubmit(event) {
                 <form onSubmit={ChatSubmit}>
                     <label>
                         Введите сообщение:
-                        <input type="text" value={text} onChange={(e) => setText(e.target.value)}/>
+                        <input type="text" value={newMessageText} onChange={(e) => setNewMessageText(e.target.value)}/>
                     </label>
                 </form>
             </div>

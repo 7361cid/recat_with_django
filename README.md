@@ -21,3 +21,4 @@ g)  Чат с продавцом
 user_client 11111111
 user_seller 11111111
 admin 1  (для admin panel)
+промокод skidka10

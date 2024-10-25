@@ -3,7 +3,6 @@ import axios from "axios";
 import { UserContext } from "../App";
 import { useHistory } from "react-router";
 
-// user/create/
 function Signup() {
 
     const [username, setUsername] = useState('');
@@ -13,7 +12,7 @@ function Signup() {
     const [SignupStatus, setSignupStatus] = useState('');
     const history = useHistory();
 
-    function get_error_message_from_response(response) {
+    function formatErrorMessage(response) {  // форматирование сообщения об ошибке
         let message = '';
         if (response.data.email) {
             message = message + `Ошибка в email ${response.data.email}`
@@ -37,9 +36,7 @@ function Signup() {
 
         } catch (error) {
             console.log("SignupSubmit", error);
-
-            //  TODO переименовать поля в админке и в формах на русские
-            let error_message = get_error_message_from_response(error.response);
+            let error_message = formatErrorMessage(error.response);
             setSignupStatus(`${error_message}`);
         }
     };

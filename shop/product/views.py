@@ -80,7 +80,9 @@ class ProductsApiDetail(APIView):
 
 class ProductBuyView(APIView):
     def post(self, request, *args, **kwargs):
-        print(f"ProductBuyView {request.data}")
+        """
+        Добавление продукта в корзину
+        """
         product = ProductModel.objects.get(pk=request.data['product_id'])
         quantity = int(request.data['product_count'])
 
@@ -95,13 +97,15 @@ class ProductBuyView(APIView):
             cart_objects = CartItemModel.objects.filter(product=product, user=request.user)
             for cart_obj in cart_objects:
                 quantity += cart_obj.quantity
-            print(f"ProductBuyView quantity  {quantity}")
             CartItemModel.objects.filter(product=product, user=request.user).delete()
             CartItemModel.objects.create(product=product, quantity=quantity, user=request.user)
-        return Response("IT's OK", status=status.HTTP_200_OK)
+        return Response("OK", status=status.HTTP_200_OK)
 
 
 class ProductLikeView(APIView):
+    """
+    Поставить лайк продукту
+    """
     def post(self, request, *args, **kwargs):
         product = ProductModel.objects.get(pk=request.data['product_id'])
         try:
@@ -113,15 +117,10 @@ class ProductLikeView(APIView):
         return Response("IT's OK", status=status.HTTP_200_OK)
 
 
-class ProductDislikeView(APIView):
-    def post(self, request, *args, **kwargs):
-        product = ProductModel.objects.get(pk=request.data['product_id'])
-        my_object = ProductLikesModel.objects.get(product=product, user=request.user)
-        if my_object:
-            my_object.delete()
-        return Response("IT's OK", status=status.HTTP_200_OK)
-
 class PromocodCheckView(APIView):
+    """
+    Проверка промокода
+    """
     def post(self, request, *args, **kwargs):
         try:
             promocod = PromocodModel.objects.get(code=request.data['promocod'])
@@ -129,28 +128,12 @@ class PromocodCheckView(APIView):
         except ObjectDoesNotExist:
             return Response("PROMOCOD NOT CORECT", status=status.HTTP_200_OK)
 
+
 class CartDeleteView(APIView):
     def delete(self, request, cartid):
-        # pk is the primary key of the object to be deleted
-        print(f"CartDeleteView {cartid}")
         my_object = CartItemModel.objects.filter(pk=cartid).first()
-        print(my_object)
         if my_object:
             my_object.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-class ProductsLikesListApiView(APIView):
-    """
-    Return list of product ids that user liked
-    """
-
-    def get(self, request):
-        queryset = ProductLikesModel.objects.filter(user=request.user)
-        like_list = ""
-        for like_obj in queryset:
-            print(like_obj.product.pk)
-            like_list += str(like_obj.product.pk) + ';'
-        return Response(f"{like_list}", status=status.HTTP_200_OK)

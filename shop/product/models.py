@@ -19,9 +19,8 @@ class ProductModel(models.Model):
     image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True, verbose_name='Фото')
     likes = ComputedTextField(compute_from='calculation_likes', default=0)
     tags = TaggableManager()
-    user_seler = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
-#  TODO  смену кнопок лайк дизлайк
-#  TODO  проблема пустой корзины
+    user_seler = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1, verbose_name='Id продавца')
+
     @property
     def calculation_likes(self):
         queryset = ProductLikesModel.objects.all()
@@ -51,7 +50,7 @@ class PromocodModel(models.Model):
     class Meta:
         verbose_name = 'Промокод'
         verbose_name_plural = 'Промокоды'
-    code = models.CharField(max_length=255, verbose_name=("XXX"))
+    code = models.CharField(max_length=255, verbose_name=("Промокод"))
     discount = models.PositiveIntegerField(default=0)
 
 class ProductLikesModel(models.Model):

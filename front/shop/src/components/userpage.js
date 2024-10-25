@@ -15,7 +15,7 @@ function UserPage() {
     const history = useHistory();
 
     useEffect(()=>{
-        if (!isCalledRef.current) {
+        if (!isCalledRef.current) {  // чтобы постоянно не запрашивать данные пользователя
           isCalledRef.current = true;
           GetUserData();
         }
@@ -55,8 +55,6 @@ async function GetProductData(item) {
 
 
 async function GetUserData(get_products=false) {
-       //event.preventDefault();
-       //axiosInstance.defaults.headers[ 'Authorization' ]
 
        try {
             const resp = await axiosInstance.get('http://127.0.0.1:8000/api/user/get/');

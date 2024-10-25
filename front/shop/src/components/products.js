@@ -24,7 +24,6 @@ async function GetChatId(owner_id) {
 
 function SyncGetChatId(owner_id) {
         GetChatId(owner_id).then(result => {
-             console.log(" SyncGEtChatId ", result);
              setChatId(result);
         }).catch(err => {
             console.log(" SyncGEtChatId ", err);
@@ -54,10 +53,8 @@ async function SearchProduct() {
 
 async function GetProducts() {
        try {
-            const resp = await axiosInstance.get('http://127.0.0.1:8000/product/api')
+            const resp = await axiosInstance.get('http://127.0.0.1:8000/product/api')  // получение списка продуктов
             setProducts(resp.data);
-            const likes_resp = await axiosInstance.get('http://127.0.0.1:8000/product/api/likes_list');
-            setLikesList(likes_resp.data);
 
         } catch (error) {
             console.log("GetProductsError", error);
